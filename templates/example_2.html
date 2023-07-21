@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Форма для отправки данных</title>
+</head>
+<body>
+    <h1>Введите данные:</h1>
+    <form id="myForm">
+        <label for="category_name">Название категории:</label>
+        <input type="text" id="category_name" name="category_name" required><br>
+
+        <input type="submit" value="Отправить">
+    </form>
+    
+    <div>
+        <h1>Category Details</h1>
+        {% if category_data %}
+            <p><strong>Category Name:</strong> {{ category_data[0] }}</p>
+        {% else %}
+            <p>Category not found.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/save_data_1', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Ошибка:', error));
+        });
+    </script>
+</body>
+</html>

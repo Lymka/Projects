@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Форма для отправки данных</title>
+</head>
+<body>
+    <h1>Введите данные:</h1>
+    <form id="myForm">
+        <label for="product_name">Название товара:</label>
+        <input type="text" id="product_name" name="product_name" required><br>
+
+        <label for="price">Цена:</label>
+        <input type="text" id="price" name="price" required><br>
+
+        <label for="quantity">Количество:</label>
+        <input type="text" id="quantity" name="quantity" required><br>
+
+        <label for="category">Категория:</label>
+        <select id="category" name="category">
+            {% for category in categories %}
+                <option value="{{ category[0] }}">{{ category[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <input type="submit" value="Отправить">
+    </form>
+
+    <h1>Информация о товаре</h1>
+    {% if product_data %}
+        <p><strong>Название:</strong> {{ product_data[0] }}</p>
+        <p><strong>Цена:</strong> {{ product_data[1] }}</p>
+        <p><strong>Количество:</strong> {{ product_data[2] }}</p>
+        <p><strong>Категория:</strong> {{ product_data[3] }}</p>
+    {% else %}
+        <p>Товар не найден.</p>
+    {% endif %}
+
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/save_data', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Ошибка:', error));
+        });
+    </script>
+</body>
+</html>
