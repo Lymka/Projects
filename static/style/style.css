@@ -178,4 +178,16 @@ html, body {
     right: 0;
     top: 50%;
     transform: translateY(-50%) translateX(100%);
-  }
+}
+
+.block-3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 20vh;
+    background-color: #4BCD1D;
+  
+    padding: 2vh 4vw;
+  
+    color: #ffffff;
+}
