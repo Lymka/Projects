@@ -7,7 +7,7 @@ db_config = {
     'host': 'localhost',
     'database': 'forest_product_catalog',
     'user': 'postgres',
-    'password': '1254'
+    'password': '1234'
 }
 
 def create_category(category_name):
@@ -23,9 +23,9 @@ def create_category(category_name):
 
         # Вставка новой категории в таблицу "categories"
         cursor.execute('''
-            INSERT INTO categories (category_name)
-            VALUES (%s)
-        ''', (category_name,))
+            INSERT INTO categories (category_name, image_path)
+            VALUES (%s, %s)
+        ''', (category_name['category_name'], category_name['image_path']))
 
         cursor.close()
         connection.close()
@@ -51,7 +51,7 @@ def read_categories():
 
         # Получение списка всех категорий
         cursor.execute('''
-            SELECT category_id, category_name FROM categories
+            SELECT category_id, category_name, image_path FROM categories
         ''')
         categories = cursor.fetchall()
 
@@ -205,20 +205,23 @@ def read_product_by_id(product_id):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Получение данных о товаре по его идентификатору
+        # Получение данных о товаре и категории по его идентификатору
         cursor.execute('''
-            SELECT product_name, price, quantity, category_id FROM products
-            WHERE product_id = %s
+            SELECT products.product_id, products.product_name, products.price, products.quantity, categories.category_id
+            FROM products
+            LEFT JOIN categories ON products.category_id = categories.category_id
+            WHERE products.product_id = %s
         ''', (product_id,))
         product = cursor.fetchone()
 
         cursor.close()
         connection.close()
 
-        return product  # Возвращаем словарь с данными о товаре или None, если товар не найден
+        return product  # Возвращаем словарь с данными о товаре и категории или None, если товар не найден
     except psycopg2.Error as e:
         print(f"Ошибка при получении данных о товаре: {e}")
         return None
+
 
 def update_product(product_id, product_data):
     try:
@@ -231,6 +234,12 @@ def update_product(product_id, product_data):
         connection.autocommit = True
         cursor = connection.cursor()
 
+        # Проверяем, существует ли товар с заданным product_id
+        existing_product = read_product_by_id(product_id)
+        if existing_product is None:
+            print(f"Товар с ID {product_id} не найден. Невозможно обновить.")
+            return False
+
         # Обновление данных о товаре
         cursor.execute('''
             UPDATE products
@@ -242,8 +251,11 @@ def update_product(product_id, product_data):
         connection.close()
 
         print("Товар успешно обновлен.")
+        return True
     except psycopg2.Error as e:
         print(f"Ошибка при обновлении товара: {e}")
+        return False
+
 
 def delete_product(product_id):
     try:
@@ -275,10 +287,34 @@ def show_category(category_id):
     return render_template('example_2.html', category_data=category_data)
         
 
-@app.route('/product/<int:product_id>')
+@app.route('/product/<int:product_id>', methods=['GET', 'POST'])
 def product_id(product_id):
-    product_data = read_product_by_id(product_id)
-    return render_template('example.html', product_data=product_data)
+    if request.method == 'GET':
+        # Получение данных о товаре по идентификатору
+        product_data = read_product_by_id(product_id)
+        # Получение списка всех категорий
+        categories = read_categories()
+        return render_template('example.html', product_data=product_data, categories=categories)
+    elif request.method == 'POST':
+        # Обработка формы обновления товара
+        product_name = request.form.get('product_name')
+        price = request.form.get('price')
+        quantity = request.form.get('quantity')
+        category_id = request.form.get('category')  # Получаем ID выбранной категории из формы
+
+        if product_name and price and quantity and category_id:
+            product_data = {
+                'product_name': product_name,
+                'price': price,
+                'quantity': quantity,
+                'category_id': int(category_id)  # Преобразуем ID категории в целое число
+            }
+            if update_product(product_id, product_data):
+                return jsonify({'message': 'Данные успешно обновлены в базе данных.'})
+            else:
+                return jsonify({'message': 'Произошла ошибка при обновлении данных в базе данных.'}), 500
+        else:
+            return jsonify({'message': 'Пожалуйста, заполните все поля формы.'}), 400
 
 
 @app.route('/product')
@@ -312,17 +348,28 @@ def save_product():
 def category():
     return render_template('example_2.html')
 
+
 @app.route('/save_data_1', methods=['POST'])
 def save_category():
     category_name = request.form.get('category_name')
+    image_path = request.form.get('image_path')
 
-    if category_name:
-        if create_category(category_name):
-            return jsonify({'message': 'Данные успешно сохранены в базе данных.'})
-        else:
-            return jsonify({'message': 'Произошла ошибка при сохранении данных в базе данных.'}), 500
+    if category_name and image_path:
+        category_data = {
+            'category_name': category_name,
+            'image_path': image_path,
+        }
+        create_category(category_data)
+        return jsonify({'message': 'Данные успешно сохранены в базе данных.'})
     else:
         return jsonify({'message': 'Пожалуйста, заполните все поля формы.'}), 400
+    
+
+@app.route('/')
+def index():
+    categories = read_categories()  # Предполагая, что у вас есть функция read_categories() для получения списка категорий
+    return render_template('index.html', categories=categories)
+
 
 if __name__ == "__main__":
     app.run()

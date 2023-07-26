@@ -89,81 +89,76 @@ html, body {
 }
 
 .slider-block {
-    position: relative; /* Добавляем позиционирование для псевдоэлементов */
-    display: flex;
-    width: 14vw;
-    height: 45vh;
-    padding: 2vh 2vw;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1vh;
-  }
-  
-  /* Стили для элемента .line, который является непосредственным потомком .slider-block */
-  .slider-block > .line {
-    width: 100%;
-    height: 1px;
-    background-color: black;
-  }
-  
-  /* Стили для текста внутри .slider-block */
-  .slider-block > .text {
-    font-size: 2vh;
-    font-weight: 600;
-    color: #000; /* Черный текст по умолчанию */
-  }
-  
-  /* Стили для контейнера .view-more-link */
-  .slider-block > .view-more-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    align-self: stretch;
-  }
-  
-  /* Стили для текста внутри .view-more-link */
-  .slider-block > .view-more-link > .text {
-    font-size: 2vh;
-    font-weight: 400;
-    color: #000; /* Черный текст по умолчанию */
-  }
-  
-  /* Стили для псевдоэлементов при наведении на .slider-block */
-  .slider-block:hover::before,
-  .slider-block:hover::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("категория.jpg"); /* Замените на свою картинку */
-    background-size: cover;
-    opacity: 100;
-    z-index: -1;
-    transition: opacity 0.3s ease; /* Плавное изменение прозрачности */
-  }
-  
-  /* Стили для текста внутри .slider-block при наведении */
-  .slider-block:hover > .text {
-    color: #fff; /* Белый текст при наведении */
-    transition: color 0.3s ease; /* Плавное изменение цвета текста */
-  }
-  
-  /* Стили для линии внутри .slider-block при наведении */
-  .slider-block:hover > .line {
-    background-color: #fff; /* Белая линия при наведении */
-    transition: background-color 0.3s ease; /* Плавное изменение цвета линии */
-  }
-  
-  /* Стили для текста внутри .view-more-link при наведении */
-  .slider-block:hover > .view-more-link > .text {
-    color: #fff; /* Белый текст при наведении */
-    transition: color 0.3s ease; /* Плавное изменение цвета текста */
-  }
-  
+  position: relative;
+  display: flex;
+  width: 14vw;
+  height: 45vh;
+  padding: 2vh 2vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1vh;
+}
 
+.slider-block > .line {
+  width: 100%;
+  height: 1px;
+  background-color: black;
+}
+
+.slider-block > .text {
+  font-size: 2vh;
+  font-weight: 600;
+  color: #000;
+}
+
+.slider-block > .view-more-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+
+.slider-block > .view-more-link > .text {
+  font-size: 2vh;
+  font-weight: 400;
+  color: #000;
+}
+
+.slider-block .image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.slider-block:hover .image {
+  opacity: 1;
+  z-index: -1;
+}
+
+.slider-block:hover > .text {
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.slider-block:hover > .view-more-link > .text {
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.slider-block:hover > .line {
+  background-color: #fff;
+  transition: color 0.3s ease;
+}
+
+.slider-block:hover > .view-more-link > img {
+  filter: invert(100%);
+  transition: color 0.3s ease;
+}
 
 .splide {
     width: 80%;

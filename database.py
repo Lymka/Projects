@@ -4,7 +4,7 @@ db_config = {
     'host': 'localhost',
     'database': 'forest_product_catalog',
     'user': 'postgres',
-    'password': '1254'
+    'password': '1234'
 }
 
 def database_exists(database_name):
@@ -70,7 +70,8 @@ def create_tables():
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS categories (
                 category_id SERIAL PRIMARY KEY,
-                category_name VARCHAR(100) NOT NULL
+                category_name VARCHAR(100) NOT NULL,
+                image_path VARCHAR(255) NOT NULL
             )
         ''')
 
@@ -81,6 +82,7 @@ def create_tables():
                 product_name VARCHAR(100) NOT NULL,
                 price NUMERIC NOT NULL,
                 quantity INTEGER NOT NULL,
+                image_path VARCHAR(255) NOT NULL,
                 category_id INTEGER REFERENCES categories(category_id) ON DELETE CASCADE
             )
         ''')
