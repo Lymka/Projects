@@ -14,7 +14,7 @@ html, body {
     padding: 2vh 4vw;
     gap: 25vh;
     height: 100vh;
-    background-image: url(main-page-background.jpg);
+    background-image: url(/static/image/main-page/main-page-background.jpg);
     background-size: cover;
 }
 
@@ -28,7 +28,7 @@ html, body {
 .logo {
     width: 150px;
     height: 115px;
-    background-image: url(logo-profi-master-green.svg);
+    background-image: url(/static/image/main-page/logo-profi-master-green.svg);
     background-size: cover;
 }
 
