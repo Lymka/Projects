@@ -367,7 +367,7 @@ def save_category():
 
 @app.route('/')
 def index():
-    categories = read_categories()  # Предполагая, что у вас есть функция read_categories() для получения списка категорий
+    categories = read_categories()
     return render_template('index.html', categories=categories)
 
 
