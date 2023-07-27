@@ -87,6 +87,15 @@ def create_tables():
             )
         ''')
 
+        # Создание таблицы с пользователями
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                user_id SERIAL PRIMARY KEY,
+                login VARCHAR(100) NOT NULL,
+                password VARCHAR(255) NOT NULL
+            )
+        ''')
+
         # Закрываем курсор и соединение
         cursor.close()
         connection.close()

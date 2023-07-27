@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 import psycopg2
+import bcrypt
 
 app = Flask(__name__)
 
@@ -281,6 +282,71 @@ def delete_product(product_id):
     except psycopg2.Error as e:
         print(f"Ошибка при удалении товара: {e}")
 
+
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password.decode('utf-8')
+
+# Функция для проверки пароля
+def check_password(hashed_password, user_password):
+    return bcrypt.checkpw(user_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+
+def create_user(username, password):
+    try:
+        connection = psycopg2.connect(
+            host=db_config['host'],
+            database=db_config['database'],
+            user=db_config['user'],
+            password=db_config['password']
+        )
+        connection.autocommit = True
+        cursor = connection.cursor()
+
+        # Вставка нового пользователя в таблицу "users"
+        cursor.execute('''
+            INSERT INTO users (login, password)
+            VALUES (%s, %s)
+        ''', (username, password))
+
+        cursor.close()
+        connection.close()
+
+        print("Пользователь успешно создан.")
+        return True  # Возвращаем True при успешном создании пользователя
+    except psycopg2.Error as e:
+        print(f"Ошибка при создании пользователя: {e}")
+        return False  # Возвращаем False при возникновении ошибки
+
+
+def get_hashed_password(login):
+    try:
+        connection = psycopg2.connect(
+            host=db_config['host'],
+            database=db_config['database'],
+            user=db_config['user'],
+            password=db_config['password']
+        )
+        connection.autocommit = True
+        cursor = connection.cursor()
+
+        # Получение хэшированного пароля пользователя по его имени
+        cursor.execute('''
+            SELECT password FROM users
+            WHERE login = %s
+        ''', (login,))
+        password = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        return password[0] if password else None
+    except psycopg2.Error as e:
+        print(f"Ошибка при получении пароля пользователя: {e}")
+        return None
+
+
 @app.route('/category/<int:category_id>')
 def show_category(category_id):
     category_data = read_category_by_id(category_id)
@@ -369,6 +435,44 @@ def save_category():
 def index():
     categories = read_categories()
     return render_template('index.html', categories=categories)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Хэшируем пароль перед сохранением в базе данных
+        hashed_password = hash_password(password)
+
+        # Сохраняем имя пользователя и хэшированный пароль в базе данных (выполняете это с помощью вашей функции create_user)
+        create_user(username, hashed_password)
+
+        return redirect(url_for('login'))
+    else:
+        return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Получаем хэшированный пароль из базы данных (выполняете это с помощью вашей функции read_user)
+        hashed_password = get_hashed_password(username)
+
+        if hashed_password and check_password(hashed_password, password):
+            # Успешный вход
+            return redirect(url_for('admin'))
+        else:
+            # Неуспешный вход - выводим сообщение об ошибке на странице входа
+            error_message = 'Неверные учетные данные. Пожалуйста, попробуйте снова.'
+            return render_template('login.html', error=error_message)
+    else:
+        # Если метод запроса GET - просто отображаем страницу входа
+        return render_template('login.html')
 
 
 if __name__ == "__main__":
