@@ -1,10 +1,17 @@
 import psycopg2
+import os
+import configparser
+
+config_path = os.path.join(os.path.dirname(__file__), 'config', 'config.cfg')
+
+config = configparser.ConfigParser()
+config.read(config_path)
 
 db_config = {
-    'host': 'localhost',
-    'database': 'forest_product_catalog',
-    'user': 'postgres',
-    'password': '1234'
+    'host': config.get('DATABASE', 'DB_HOST'),
+    'database': config.get('DATABASE', 'DB_NAME'),
+    'user': config.get('DATABASE', 'DB_USER'),
+    'password': config.get('DATABASE', 'DB_PASSWORD')
 }
 
 def database_exists(database_name):
@@ -17,7 +24,6 @@ def database_exists(database_name):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Проверяем, существует ли база данных с заданным именем
         cursor.execute("SELECT 1 FROM pg_database WHERE datname = %s;", (database_name,))
         exists = cursor.fetchone()
 
@@ -40,7 +46,6 @@ def create_database():
             connection.autocommit = True
             cursor = connection.cursor()
 
-            # Создаем новую базу данных
             cursor.execute(f"CREATE DATABASE {db_config['database']} ENCODING 'UTF8' TEMPLATE template0")
 
             cursor.close()
@@ -52,9 +57,8 @@ def create_database():
     except psycopg2.Error as e:
         print(f"Ошибка при создании базы данных: {e}")
 
-def create_tables():
+def drop_tables():
     try:
-        # Подключение к созданной базе данных
         connection = psycopg2.connect(
             host=db_config['host'],
             database=db_config['database'],
@@ -63,10 +67,42 @@ def create_tables():
         )
         connection.autocommit = True
 
-        # Создание объекта для выполнения SQL-запросов
         cursor = connection.cursor()
 
-        # Создание таблицы с категориями
+        cursor.execute('''
+            DROP TABLE IF EXISTS products CASCADE
+        ''')
+
+        cursor.execute('''
+            DROP TABLE IF EXISTS categories CASCADE
+        ''')
+
+        cursor.execute('''
+            DROP TABLE IF EXISTS users CASCADE
+        ''')
+
+        cursor.close()
+        connection.close()
+
+        print("Таблицы успешно удалены.")
+    except psycopg2.Error as e:
+        print(f"Ошибка при удалении таблиц: {e}")
+
+def create_tables():
+
+    drop_tables()
+
+    try:
+        connection = psycopg2.connect(
+            host=db_config['host'],
+            database=db_config['database'],
+            user=db_config['user'],
+            password=db_config['password']
+        )
+        connection.autocommit = True
+
+        cursor = connection.cursor()
+
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS categories (
                 category_id SERIAL PRIMARY KEY,
@@ -75,7 +111,6 @@ def create_tables():
             )
         ''')
 
-        # Создание таблицы с продуктами
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS products (
                 product_id SERIAL PRIMARY KEY,
@@ -87,7 +122,6 @@ def create_tables():
             )
         ''')
 
-        # Создание таблицы с пользователями
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
@@ -96,7 +130,6 @@ def create_tables():
             )
         ''')
 
-        # Закрываем курсор и соединение
         cursor.close()
         connection.close()
 

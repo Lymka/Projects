@@ -1,15 +1,47 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import psycopg2
 import bcrypt
+import os
+import configparser
 
 app = Flask(__name__)
 
+config_path = os.path.join(os.path.dirname(__file__), 'config', 'config.cfg')
+
+config = configparser.ConfigParser()
+config.read(config_path)
+
+app.secret_key = config.get('APP', 'SECRET_KEY')
+
+login_manager = LoginManager(app)
+
 db_config = {
-    'host': 'localhost',
-    'database': 'forest_product_catalog',
-    'user': 'postgres',
-    'password': '1234'
+    'host': config.get('DATABASE', 'DB_HOST'),
+    'database': config.get('DATABASE', 'DB_NAME'),
+    'user': config.get('DATABASE', 'DB_USER'),
+    'password': config.get('DATABASE', 'DB_PASSWORD')
 }
+
+class User(UserMixin):
+    def __init__(self, login):
+        self.id = login
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id) 
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
 
 def create_category(category_name):
     try:
@@ -293,7 +325,7 @@ def check_password(hashed_password, user_password):
     return bcrypt.checkpw(user_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
 
-def create_user(username, password):
+def create_user(login, password):
     try:
         connection = psycopg2.connect(
             host=db_config['host'],
@@ -308,7 +340,7 @@ def create_user(username, password):
         cursor.execute('''
             INSERT INTO users (login, password)
             VALUES (%s, %s)
-        ''', (username, password))
+        ''', (login, password))
 
         cursor.close()
         connection.close()
@@ -438,6 +470,7 @@ def index():
 
 
 @app.route('/admin')
+@login_required
 def admin():
     return render_template('admin.html')
 
@@ -468,12 +501,21 @@ def login():
         hashed_password = get_hashed_password(login)
 
         if hashed_password and check_password(hashed_password, password):
+            user = User(login)
+            login_user(user)
             return jsonify({'message': 'Выполняется вход.'}), 200
         else:
             error_message = 'Неверные учетные данные. Пожалуйста, попробуйте снова.'
             return render_template('login.html', error=error_message)
     else:
         return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 
 if __name__ == "__main__":
