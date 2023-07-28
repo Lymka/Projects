@@ -437,19 +437,24 @@ def index():
     return render_template('index.html', categories=categories)
 
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
+        login = request.form.get('login')
         password = request.form.get('password')
 
-        # Хэшируем пароль перед сохранением в базе данных
         hashed_password = hash_password(password)
 
-        # Сохраняем имя пользователя и хэшированный пароль в базе данных (выполняете это с помощью вашей функции create_user)
-        create_user(username, hashed_password)
+        if create_user(login, hashed_password):
+            return jsonify({'message': 'Пользователь успешно создан.'}), 200
+        else:
+            return jsonify({'message': 'Ошибка при создании пользователя.'}), 500
 
-        return redirect(url_for('login'))
     else:
         return render_template('register.html')
 
@@ -457,21 +462,17 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        login = request.form.get('login')
         password = request.form.get('password')
 
-        # Получаем хэшированный пароль из базы данных (выполняете это с помощью вашей функции read_user)
-        hashed_password = get_hashed_password(username)
+        hashed_password = get_hashed_password(login)
 
         if hashed_password and check_password(hashed_password, password):
-            # Успешный вход
-            return redirect(url_for('admin'))
+            return jsonify({'message': 'Выполняется вход.'}), 200
         else:
-            # Неуспешный вход - выводим сообщение об ошибке на странице входа
             error_message = 'Неверные учетные данные. Пожалуйста, попробуйте снова.'
             return render_template('login.html', error=error_message)
     else:
-        # Если метод запроса GET - просто отображаем страницу входа
         return render_template('login.html')
 
 

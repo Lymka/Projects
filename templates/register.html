@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="back">
-        <form class="login-form">
+        <form class="login-form" id="login-form">
             <div class="text">Личный Кабинет</div>
             <div class="form-group">
                 <label for="login" class="label-form">Логин</label>
@@ -24,5 +24,23 @@
             <input type="submit" class="button-form" value="Регистрация">
         </form>
     </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/register', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                window.location.href = '/login';
+            })
+            .catch(error => console.error('Ошибка:', error));
+        });
+    </script>
 </body>
 </html>
