@@ -469,6 +469,11 @@ def index():
     return render_template('index.html', categories=categories)
 
 
+@app.route('/map')
+def map():
+    return render_template('map.html')
+
+
 @app.route('/admin')
 @login_required
 def admin():

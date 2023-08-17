@@ -6,8 +6,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
     <title>ПрофиМастер</title>
-    <link rel="shortcut icon" href="static\image\main-page\logo-profi-master-green.svg">
-    <link rel="stylesheet" href="static\style\style.css"/>
+    <link rel="shortcut icon" href="/static/icons/main-page/logo-profi-master-green.svg">
+    <link rel="stylesheet" href="/static/styles/style.css"/>
 </head>
 <body>
     <div class="block-1">
@@ -15,9 +15,9 @@
             <div class="logo">
             </div>
             <div class="phone-numbers-frame">
-                <img src="static\image\main-page\иконка телефона.svg">
+                <img src="/static/icons/main-page/иконка телефона.svg">
                 <div class="phone-numbers">
-                    <a href="tel:+89911965847" class="phone-number">8(991)196-58-47</a>
+                    <a href="tel:89911965847" class="phone-number">8(991)196-58-47</a>
                     <a href="tel:247222" class="phone-number">24-72-22</a>
                 </div>
             </div>
@@ -28,9 +28,9 @@
         <div class="frame-3">
             <div class="social-media">
                 <div class="social-media-text">наши соцсети</div>
-                <img src="static\image\main-page\telegram.svg">
-                <img src="static\image\main-page\viber.svg">
-                <img src="static\image\main-page\whatsapp.svg">
+                <a href="#"><img src="/static/icons/main-page/telegram.svg"></a>
+                <a href="#"><img src="/static/icons/main-page/viber.svg"></a>
+                <a href="https://wa.me/message/ASYL635HS5J4C1"><img src="/static/icons/main-page/whatsapp.svg"></a>
             </div>
         </div>
     </div>
@@ -46,10 +46,10 @@
                                 {{ category[1] }}
                             </div>
                             <div class="line"></div>
-                            <div class="view-more-link">
+                            <a href="#" class="view-more-link">
                                 <div class="text">подробнее</div>
-                                <img src="static\image\main-page\стрелка.svg">
-                            </div>
+                                <img src="/static/icons/main-page/стрелка.svg">
+                            </a>
                         </div>
                     </div>
                     {% endfor %}
@@ -58,59 +58,94 @@
         </div>
     </div>
     <div class="block-3">
-        <div>Наш адрес</div>
+        <div class="text">Наш адрес</div>
         <div class="address-text">
-            <div>Московское шоссе, 46А</div>
-            <div>Этаж 2, офис 6</div>
+            <div class="street">Московское шоссе, 46А</div>
+            <div class="office">Этаж 2, офис 6</div>
         </div>
-        <div><a href="#" class="map-link">Карта</a></div>
+        <a href="map" class="map-link">
+            <div class="text">Карта</div>
+            <img src="/static/icons/main-page/стрелка.svg">
+        </a>
     </div>
     <div class="block-4">
         <div class="text">Почему мы? С нами просто и понятно:</div>
         <div class="frame">
-            <div class="card-info">
-                <img src="static\image\main-page\иконка-инфо-1.svg">
+            <div class="card-info first">
+                <img src="/static/icons/main-page/иконка-инфо-1.svg">
                 <div class="main-text">Реализуем пиломатериал всех видов</div>
                 <div class="additional-text">Реализуем пиломатериал всех видов и размеров напрямую с пилорамы без посредников.</div>
             </div>
-            <div class="card-info">
-                <img src="static\image\main-page\иконка-инфо-2.svg">
+            <div class="card-info second">
+                <img src="/static/icons/main-page/иконка-инфо-2.svg">
                 <div class="main-text">Быстро доставим до вас все материалы </div>
                 <div class="additional-text">Осуществляем услуги доставки и разгрузки на авто “Камаз” и “Газель”.</div>
             </div>
         </div>
         <div class="frame">
-            <div class="card-info">
-                <img src="static\image\main-page\иконка-инфо-3.svg">
+            <div class="card-info third">
+                <img src="/static/icons/main-page/иконка-инфо-3.svg">
                 <div class="main-text">Большой опыт работы</div>
                 <div class="additional-text">Мы занимаемся уже 5 лет механизированной штукатуркой стен, и знаем о ней всё!</div>
             </div>
-            <div class="card-info">
-                <img src="static\image\main-page\иконка-инфо-4.svg">
+            <div class="card-info fourth">
+                <img src="/static/icons/main-page/иконка-инфо-4.svg">
                 <div class="main-text">Индивидуальный подход к каждому клиенту</div>
                 <div class="additional-text">Вникаем в особенности объекта и предлагаем технически верные решения, согласно СНИПу и собственному опыту.</div>
             </div>
         </div>
     </div>
-    <div class="block-5">
-        
+    <div class="footer">
+        <div class="footer-info">
+            <div class="text">Profi-Master</div>
+            <a href="tel:89911965847" class="footer-phone-number">8(991)196-58-47</a>
+            <a href="tel:247222" class="footer-phone-number">24-72-22</a>
+        </div>
+        <div class="footer-messangers">
+            <a href="#"><img src="/static/icons/main-page/telegram.svg"></a>
+            <a href="#"><img src="/static/icons/main-page/viber.svg"></a>
+            <a href="https://wa.me/message/ASYL635HS5J4C1"><img src="/static/icons/main-page/whatsapp.svg"></a>
+        </div>
+        <div class="footer-links">
+            <a href="/templates/index.html">Главная</a>
+            <a href="/templates/first-work.html">Штукатурка</a>
+            <a href="/templates/second-work.html">Пиломатериалы</a>
+            <a href="/templates/third-work.html">Домики и мебель</a>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
     <script>
         var splide = new Splide( '.splide', {
-            perPage: 4,
+            perPage: 5,
             gap: '2rem',
             type: 'loop',
             breakpoints: {
-                640: {
+                2000: {
+                    perPage: 4,
+                    height : '50vh',
+                },
+                1600: {
+                    perPage: 3,
+                    height : '50vh',
+                },
+                1200: {
+                    perPage: 3,
+                    height : '40vh',
+                },
+                1030: {
                     perPage: 2,
-                    gap    : '.7rem',
-                    height : '6rem',
+                    height : '40vh',
+
+                },
+                640: {
+                    perPage: 1,
+                    gap    : '2rem',
+                    height : '40vh',
                 },
                 480: {
                     perPage: 1,
                     gap    : '.7rem',
-                    height : '6rem',
+                    height : '40vh',
                 },
             },
         } );
