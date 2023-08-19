@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/admin.css">
+    <title>Категории</title>
+</head>
+
+<body>
+    {% extends 'navbar.html' %}
+    {% block content %}
+    <main class="table">
+        <section class="table__header">
+            <h1>Категории</h1>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th> Id </th>
+                        <th> Название </th>
+                        <th> Размеры </th>
+                        <th> Описание </th>
+                        <th> Изображение </th>
+                        <th> Цена </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                    <tr>
+                        <td> {{ category[0] }} </td>
+                        <td> {{ category[1] }}</td>
+                        <td> {{ category[2] }} </td>
+                        <td> {{ category[3] }} </td>
+                        <td><img src="{{ category[5] }}"></td>
+                        <td> <strong> {{ category[4] }} </strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+    {% endblock %}
+
+</body>
+
+</html>

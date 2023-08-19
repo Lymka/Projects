@@ -84,7 +84,7 @@ def read_categories():
 
         # Получение списка всех категорий
         cursor.execute('''
-            SELECT category_id, category_name, image_path FROM categories
+            SELECT category_id, category_name, dimensions, description, price, image_path FROM categories
         ''')
         categories = cursor.fetchall()
 
@@ -212,9 +212,11 @@ def read_products():
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Получение списка всех товаров
+        # Получение списка всех товаров с данными о категории
         cursor.execute('''
-            SELECT product_id, product_name, price, quantity, category_id FROM products
+            SELECT p.product_id, p.product_name, p.price, p.quantity, p.image_path, p.category_id, c.category_name
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.category_id
         ''')
         products = cursor.fetchall()
 
@@ -224,8 +226,11 @@ def read_products():
         print("Список товаров:")
         for product in products:
             print(product)
+
+        return products
     except psycopg2.Error as e:
         print(f"Ошибка при получении списка товаров: {e}")
+
 
 def read_product_by_id(product_id):
     try:
@@ -477,7 +482,20 @@ def map():
 @app.route('/admin')
 @login_required
 def admin():
-    return render_template('admin.html')
+    return render_template('admin-home.html')
+
+
+@app.route('/admin/categories')
+@login_required
+def admin_categories():
+    categories = read_categories()
+    return render_template('admin-categories.html', categories=categories)
+
+@app.route('/admin/products')
+@login_required
+def admin_products():
+    products = read_products()
+    return render_template('admin-products.html', products=products)
 
 
 @app.route('/register', methods=['GET', 'POST'])
