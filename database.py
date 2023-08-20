@@ -191,4 +191,3 @@ def generate_data():
 if __name__ == "__main__":
     create_database()
     create_tables()
-    generate_data()

@@ -25,6 +25,7 @@
                         <th> Описание </th>
                         <th> Изображение </th>
                         <th> Цена </th>
+                        <th> Добавить </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,22 @@
                         <td> {{ category[3] }} </td>
                         <td><img src="{{ category[5] }}"></td>
                         <td> <strong> {{ category[4] }} </strong></td>
+                        <td>
+                            <div class="buttons">
+                                <a class="button" href="#">
+                                    <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M20.4387 13.3443L10.2829 23.5H7V20.2171L17.1557 10.0613L20.4387 13.3443ZM21.8529 11.93L18.57 8.6471L19.0371 8.17992L18.33 7.47281L19.0371 8.17992C19.2527 7.96436 19.5086 7.79337 19.7903 7.67671C20.0719 7.56004 20.3738 7.5 20.6786 7.5C20.9835 7.5 21.2853 7.56004 21.567 7.67671L21.9497 6.75283L21.567 7.67671C21.8486 7.79337 22.1045 7.96436 22.3201 8.17992C22.5356 8.39548 22.7066 8.65139 22.8233 8.93303C22.94 9.21468 23 9.51654 23 9.82139C23 10.1262 22.94 10.4281 22.8233 10.7097C22.7066 10.9914 22.5356 11.2473 22.3201 11.4629L23.0272 12.17L22.3201 11.4629L21.8529 11.93Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="1" y="1.5" width="28" height="28" rx="14" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                </a>
+                                <a class="button" href="#">
+                                    <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7.28571 22.5C7.28571 23.6 8.44286 24.5 9.85714 24.5H20.1429C21.5571 24.5 22.7143 23.6 22.7143 22.5V10.5H7.28571V22.5ZM24 7.5H19.5L18.2143 6.5H11.7857L10.5 7.5H6V9.5H24V7.5Z" fill="currentColor"/>
+                                        <rect x="1" y="1.5" width="28" height="28" rx="14" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                </a>
+                            </div> 
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/admin.css">
+    <title>Категории</title>
+</head>
+
+<body>
+    {% extends 'navbar.html' %}
+    {% block content %}
+        <div class="wrapper">
+            <div class="title">
+                <h1>Категории</h1>
+            </div>
+            <div class="contact-form">
+                <form class="input-fields" action="/submit" method="POST">
+                    <input type="text" class="input" name="category_name" placeholder="Название">
+                    <input type="text" class="input" name="dimensions" placeholder="Размеры">
+                    <input type="text" class="input" name="description" placeholder="Описание">
+                    <input type="text" class="input" name="price" placeholder="Цена">
+                    <input type="text" class="input" name="image_path" placeholder="Изображение">
+
+                    <button type="submit" class="btn">Отправить</button>
+                </form>
+            </div>
+        </div>
+    {% endblock %}
+
+</body>
+
+</html>

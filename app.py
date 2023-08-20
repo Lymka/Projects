@@ -481,21 +481,46 @@ def map():
 
 @app.route('/admin')
 @login_required
-def admin():
-    return render_template('admin-home.html')
-
-
-@app.route('/admin/categories')
-@login_required
-def admin_categories():
-    categories = read_categories()
-    return render_template('admin-categories.html', categories=categories)
+def admin_home():
+    current_page = 'admin'
+    return render_template('admin-home.html', current_page=current_page)
 
 @app.route('/admin/products')
 @login_required
 def admin_products():
+    current_page = 'products'
     products = read_products()
-    return render_template('admin-products.html', products=products)
+    return render_template('admin-products.html', products=products, current_page=current_page)
+
+@app.route('/admin/categories')
+@login_required
+def admin_categories():
+    current_page = 'categories'
+    categories = read_categories()
+    return render_template('admin-categories.html', categories=categories, current_page=current_page)
+
+
+@app.route('/admin/category')
+@login_required
+def admin_category():
+    return render_template('admin-category-edit.html')
+
+
+@app.route('/submit', methods=['POST'])
+def submit_form():
+    if request.method == 'POST':
+        category_name = request.form['category_name']
+        dimensions = request.form['dimensions']
+        description = request.form['description']
+        price = request.form['price']
+        image_path = request.form['image_path']
+        
+        # Вызываем функцию create_category для добавления в базу данных
+        if create_category({'category_name': category_name, 'image_path': image_path, 'dimensions': dimensions, 'description': description, 'price': price}):
+            return "Категория успешно добавлена в базу данных"
+        else:
+            return "Ошибка при добавлении категории в базу данных"
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
