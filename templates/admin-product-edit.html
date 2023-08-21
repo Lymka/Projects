@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/admin.css">
+    <title>{% if edit_mode %} Редактирование продукта {% else %} Создание продукта {% endif %}</title>
+</head>
+
+<body>
+    {% extends 'navbar.html' %}
+    {% block content %}
+        <div class="wrapper">
+            <div class="title">
+                <h1>{% if edit_mode %} Редактирование продукта {% else %} Создание продукта {% endif %}</h1>
+            </div>
+            <div class="contact-form">
+                <form class="input-fields" method="POST">
+                    <input type="text" class="input" name="product_name" placeholder="Название" value="{{ product_data[0] if edit_mode else '' }}">
+                    <input type="text" class="input" name="price" placeholder="Цена" value="{{ product_data[1] if edit_mode else '' }}">
+                    <input type="text" class="input" name="quantity" placeholder="Количество" value="{{ product_data[2] if edit_mode else '' }}">
+                    <input type="text" class="input" name="image_path" placeholder="Изображение" value="{{ product_data[3] if edit_mode else '' }}">
+
+                    <label for="category_id">Выберите категорию:</label>
+                    <select id="category_id" name="category_id">
+                        {% for category in categories %}
+                            <option value="{{ category[0] }}" {% if edit_mode and category[0] == product_data[4] %}selected{% endif %}>{{ category[1] }}</option>
+                        {% endfor %}
+                    </select><br>
+
+                    <button type="submit" class="btn">{% if edit_mode %}Сохранить{% else %}Создать{% endif %}</button>
+                </form>
+            </div>
+        </div>
+    {% endblock %}
+</body>
+
+</html>

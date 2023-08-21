@@ -1,4 +1,5 @@
 main.table {
+    margin: 2rem;
     height: 90vh;
 
     border-radius: .8rem;
@@ -9,8 +10,6 @@ main.table {
 }
 
 .table__header {
-    width: 100%;
-    height: 10%;
     padding: .8rem 1rem;
 
     display: flex;
@@ -21,7 +20,6 @@ main.table {
 }
 
 .table__body {
-    width: 95%;
     max-height: calc(89% - 1.6rem);
     background-color: #fffb;
 
@@ -75,6 +73,15 @@ thead th {
     background-color: #d5d1defe;
     cursor: pointer;
     text-transform: capitalize;
+}
+
+a {
+    text-decoration: none;
+    color: #252525;
+}
+
+a:hover {
+    color: #61892F;
 }
 
 tbody tr:nth-child(even) {
@@ -132,15 +139,14 @@ table .button:hover {
 /* form */
 
 .wrapper {
-    margin: 2rem 1rem 1rem 1rem;
-    width: 70%;
+    margin: 2rem;
     padding: 1rem;
     background-color: #222629;
     border-radius: .6rem;
 }
 
 .wrapper .title h1 {
-    color: #c5ecfd;
+    color: #C0D9A0;
     text-align: center;
     margin-bottom: 2rem;
 }
@@ -156,6 +162,7 @@ table .button:hover {
 .input-fields {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
 }
 
@@ -163,36 +170,46 @@ table .button:hover {
     margin: 1rem 0;
     background: transparent;
     border: none;
-    border-bottom: 2px solid #c5ecfd;
+    border-bottom: 2px solid #6B6E70;
     padding: 10px;
-    color: #c5ecfd;
+    color: #6B6E70;
     outline: none;
+    transition: border-bottom 0.3s ease-in-out;
+}
+
+.input-fields .input:hover {
+    border-bottom: 2px solid #C0D9A0;
+}
+
+.input {
+    width: 90%;
 }
 
 ::-webkit-input-placeholder {
     /* Chrome/Opera/Safari */
-    color: #c5ecfd;
+    color: #6B6E70;
 }
 
 ::-moz-placeholder {
     /* Firefox 19+ */
-    color: #c5ecfd;
+    color: #6B6E70;
 }
 
 :-ms-input-placeholder {
     /* IE 10+ */
-    color: #c5ecfd;
+    color: #6B6E70;
 }
 
 .btn {
     background: #61892F;
     text-align: center;
-    padding: 1rem;
-    width: auto;
+    padding: 1rem 2rem;
+    width: fit-content;
     border-radius: .6rem;
     color: #C0D9A0;
     cursor: pointer;
     text-transform: uppercase;
+    border: none;
 }
 
 /* end form */

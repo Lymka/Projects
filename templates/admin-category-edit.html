@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles/admin.css">
-    <title>Категории</title>
+    <title>{% if edit_mode %} Редактирование категории {% else %} Создание категории {% endif %}</title>
 </head>
 
 <body>
@@ -13,17 +13,17 @@
     {% block content %}
         <div class="wrapper">
             <div class="title">
-                <h1>Категории</h1>
+                <h1>{% if edit_mode %} Редактирование категории {% else %} Создание категории {% endif %}</h1>
             </div>
             <div class="contact-form">
-                <form class="input-fields" action="/submit" method="POST">
-                    <input type="text" class="input" name="category_name" placeholder="Название">
-                    <input type="text" class="input" name="dimensions" placeholder="Размеры">
-                    <input type="text" class="input" name="description" placeholder="Описание">
-                    <input type="text" class="input" name="price" placeholder="Цена">
-                    <input type="text" class="input" name="image_path" placeholder="Изображение">
+                <form class="input-fields" method="POST">
+                    <input type="text" class="input" name="category_name" placeholder="Название" value="{{ category_data[0] if edit_mode else '' }}">
+                    <input type="text" class="input" name="dimensions" placeholder="Размеры" value="{{ category_data[1] if edit_mode else '' }}">
+                    <input type="text" class="input" name="description" placeholder="Описание" value="{{ category_data[2] if edit_mode else '' }}">
+                    <input type="text" class="input" name="price" placeholder="Цена" value="{{ category_data[3] if edit_mode else '' }}">
+                    <input type="text" class="input" name="image_path" placeholder="Изображение" value="{{ category_data[4] if edit_mode else '' }}">
 
-                    <button type="submit" class="btn">Отправить</button>
+                    <button type="submit" class="btn">{% if edit_mode %}Сохранить{% else %}Создать{% endif %}</button>
                 </form>
             </div>
         </div>

@@ -43,7 +43,7 @@ class User(UserMixin):
 def load_user(user_id):
     return User(user_id)
 
-def create_category(category_name):
+def create_category(category_data):
     try:
         connection = psycopg2.connect(
             host=db_config['host'],
@@ -54,21 +54,19 @@ def create_category(category_name):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Вставка новой категории в таблицу "categories"
         cursor.execute('''
-            INSERT INTO categories (category_name, image_path)
-            VALUES (%s, %s)
-        ''', (category_name['category_name'], category_name['image_path']))
+            INSERT INTO categories (category_name, dimensions, description, price, image_path)
+            VALUES (%s, %s, %s, %s, %s)
+        ''', (category_data['category_name'], category_data['dimensions'], category_data['description'], category_data['price'], category_data['image_path']))
 
         cursor.close()
         connection.close()
 
-        
         print("Категория успешно добавлена.")
-        return True  # Возвращаем True при успешном добавлении
+        return True
     except psycopg2.Error as e:
         print(f"Ошибка при добавлении категории: {e}")
-        return False  # Возвращаем False при возникновении ошибки
+        return False
 
 
 def read_categories():
@@ -82,7 +80,6 @@ def read_categories():
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Получение списка всех категорий
         cursor.execute('''
             SELECT category_id, category_name, dimensions, description, price, image_path FROM categories
         ''')
@@ -95,7 +92,7 @@ def read_categories():
         for category in categories:
             print(category)
 
-        return categories  # Возвращаем список категорий
+        return categories
     except psycopg2.Error as e:
         print(f"Ошибка при получении списка категорий: {e}")
         return None
@@ -112,9 +109,9 @@ def read_category_by_id(category_id):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Получение данных о категории по её идентификатору
         cursor.execute('''
-            SELECT category_name FROM categories
+            SELECT category_name, dimensions, description, price, image_path
+            FROM categories
             WHERE category_id = %s
         ''', (category_id,))
         category = cursor.fetchone()
@@ -122,13 +119,14 @@ def read_category_by_id(category_id):
         cursor.close()
         connection.close()
 
-        return category  # Возвращаем словарь с данными о категории или None, если категория не найдена
+        return category
     except psycopg2.Error as e:
         print(f"Ошибка при получении данных о категории: {e}")
         return None
 
 
-def update_category(category_id, new_category_name):
+
+def update_category(category_id, new_category_data):
     try:
         connection = psycopg2.connect(
             host=db_config['host'],
@@ -139,12 +137,15 @@ def update_category(category_id, new_category_name):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Обновление данных о категории
         cursor.execute('''
             UPDATE categories
-            SET category_name = %s
+            SET category_name = %s,
+                dimensions = %s,
+                description = %s,
+                price = %s,
+                image_path = %s
             WHERE category_id = %s
-        ''', (new_category_name, category_id))
+        ''', (new_category_data['category_name'], new_category_data['dimensions'], new_category_data['description'], new_category_data['price'], new_category_data['image_path'], category_id))
 
         cursor.close()
         connection.close()
@@ -152,6 +153,7 @@ def update_category(category_id, new_category_name):
         print("Категория успешно обновлена.")
     except psycopg2.Error as e:
         print(f"Ошибка при обновлении категории: {e}")
+
 
 def delete_category(category_id):
     try:
@@ -164,7 +166,6 @@ def delete_category(category_id):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Удаление категории
         cursor.execute('''
             DELETE FROM categories
             WHERE category_id = %s
@@ -177,6 +178,7 @@ def delete_category(category_id):
     except psycopg2.Error as e:
         print(f"Ошибка при удалении категории: {e}")
 
+
 def create_product(product_data):
     try:
         connection = psycopg2.connect(
@@ -188,18 +190,20 @@ def create_product(product_data):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Вставка нового товара в таблицу "products"
         cursor.execute('''
-            INSERT INTO products (product_name, price, quantity, category_id)
-            VALUES (%s, %s, %s, %s)
-        ''', (product_data['product_name'], product_data['price'], product_data['quantity'], product_data['category_id']))
+            INSERT INTO products (product_name, price, quantity, image_path, category_id)
+            VALUES (%s, %s, %s, %s, %s)
+        ''', (product_data['product_name'], product_data['price'], product_data['quantity'], product_data['image_path'], product_data['category_id']))
 
         cursor.close()
         connection.close()
 
-        print("Товар успешно добавлен.")
+        print("Товар успешно добавлена.")
+        return True
     except psycopg2.Error as e:
         print(f"Ошибка при добавлении товара: {e}")
+        return False
+
 
 def read_products():
     try:
@@ -212,7 +216,6 @@ def read_products():
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Получение списка всех товаров с данными о категории
         cursor.execute('''
             SELECT p.product_id, p.product_name, p.price, p.quantity, p.image_path, p.category_id, c.category_name
             FROM products p
@@ -243,7 +246,6 @@ def read_product_by_id(product_id):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Получение данных о товаре и категории по его идентификатору
         cursor.execute('''
             SELECT products.product_id, products.product_name, products.price, products.quantity, categories.category_id
             FROM products
@@ -255,7 +257,7 @@ def read_product_by_id(product_id):
         cursor.close()
         connection.close()
 
-        return product  # Возвращаем словарь с данными о товаре и категории или None, если товар не найден
+        return product
     except psycopg2.Error as e:
         print(f"Ошибка при получении данных о товаре: {e}")
         return None
@@ -272,13 +274,6 @@ def update_product(product_id, product_data):
         connection.autocommit = True
         cursor = connection.cursor()
 
-        # Проверяем, существует ли товар с заданным product_id
-        existing_product = read_product_by_id(product_id)
-        if existing_product is None:
-            print(f"Товар с ID {product_id} не найден. Невозможно обновить.")
-            return False
-
-        # Обновление данных о товаре
         cursor.execute('''
             UPDATE products
             SET product_name = %s, price = %s, quantity = %s, category_id = %s
@@ -452,22 +447,6 @@ def category():
     return render_template('example_2.html')
 
 
-@app.route('/save_data_1', methods=['POST'])
-def save_category():
-    category_name = request.form.get('category_name')
-    image_path = request.form.get('image_path')
-
-    if category_name and image_path:
-        category_data = {
-            'category_name': category_name,
-            'image_path': image_path,
-        }
-        create_category(category_data)
-        return jsonify({'message': 'Данные успешно сохранены в базе данных.'})
-    else:
-        return jsonify({'message': 'Пожалуйста, заполните все поля формы.'}), 400
-    
-
 @app.route('/')
 def index():
     categories = read_categories()
@@ -500,27 +479,124 @@ def admin_categories():
     return render_template('admin-categories.html', categories=categories, current_page=current_page)
 
 
-@app.route('/admin/category')
+@app.route('/admin/category', methods=['POST', 'GET'])
 @login_required
-def admin_category():
-    return render_template('admin-category-edit.html')
+def admin_create_category():
+    if request.method == "POST":
+        category_name = request.form['category_name']
+        dimensions = request.form['dimensions']
+        description = request.form['description']
+        price = request.form['price']
+        image_path = request.form['image_path']
+
+        category_data = {
+            'category_name': category_name,
+            'dimensions': dimensions,
+            'description': description,
+            'price': price,
+            'image_path': image_path
+        }
+
+        if create_category(category_data):
+            return redirect('/admin/categories')
+        
+    elif request.method == 'GET':
+        return render_template('admin-category-edit.html')
 
 
-@app.route('/submit', methods=['POST'])
-def submit_form():
+@app.route('/admin/product', methods=['POST', 'GET'])
+@login_required
+def admin_create_product():
+    if request.method == "POST":
+        product_name = request.form['product_name']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        image_path = request.form['image_path']
+        category_id = request.form['category_id']
+
+        product_data = {
+            'product_name': product_name,
+            'price': price,
+            'quantity': quantity,
+            'image_path': image_path,
+            'category_id': category_id
+        }
+
+        if create_product(product_data):
+            return redirect('/admin/products')
+        
+    elif request.method == 'GET':
+        categories = read_categories()
+        return render_template('admin-product-edit.html', categories=categories)
+
+
+@app.route('/admin/category/delete/<int:category_id>', methods=['GET'])
+@login_required
+def admin_delete_category(category_id):
+    delete_category(category_id)
+    return redirect('/admin/categories')
+
+
+@app.route('/admin/product/delete/<int:product_id>', methods=['GET'])
+@login_required
+def admin_delete_product(product_id):
+    delete_product(product_id)
+    return redirect('/admin/products')
+
+
+@app.route('/admin/category/edit/<int:category_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_category(category_id):
+    edit_mode = True
+    category_data = read_category_by_id(category_id)
+
     if request.method == 'POST':
         category_name = request.form['category_name']
         dimensions = request.form['dimensions']
         description = request.form['description']
         price = request.form['price']
         image_path = request.form['image_path']
-        
-        # Вызываем функцию create_category для добавления в базу данных
-        if create_category({'category_name': category_name, 'image_path': image_path, 'dimensions': dimensions, 'description': description, 'price': price}):
-            return "Категория успешно добавлена в базу данных"
-        else:
-            return "Ошибка при добавлении категории в базу данных"
 
+        category_data = {
+            'category_name': category_name,
+            'dimensions': dimensions,
+            'description': description,
+            'price': price,
+            'image_path': image_path
+        }
+
+        update_category(category_id, category_data)
+        return redirect('/admin/categories')
+
+    return render_template('admin-category-edit.html', edit_mode=edit_mode, category_data=category_data)
+
+
+@app.route('/admin/product/edit/<int:product_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_product(product_id):
+    edit_mode = True
+    product_data = read_product_by_id(product_id)
+    categories = read_categories()
+
+    if request.method == 'POST':
+        product_name = request.form['product_name']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        image_path = request.form['image_path']
+        category_id = request.form['category_id']
+
+        product_data = {
+            'product_name': product_name,
+            'price': price,
+            'quantity': quantity,
+            'image_path': image_path,
+            'category_id': category_id
+        }
+
+        update_product(product_id, product_data)
+        return redirect('/admin/products')
+
+    return render_template('admin-product-edit.html', edit_mode=edit_mode, product_data=product_data, categories=categories)
 
 
 @app.route('/register', methods=['GET', 'POST'])
