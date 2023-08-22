@@ -88,10 +88,6 @@ def read_categories():
         cursor.close()
         connection.close()
 
-        print("Список категорий:")
-        for category in categories:
-            print(category)
-
         return categories
     except psycopg2.Error as e:
         print(f"Ошибка при получении списка категорий: {e}")
@@ -247,7 +243,7 @@ def read_product_by_id(product_id):
         cursor = connection.cursor()
 
         cursor.execute('''
-            SELECT products.product_id, products.product_name, products.price, products.quantity, categories.category_id
+            SELECT products.product_id, products.product_name, products.price, products.quantity, products.image_path, categories.category_id
             FROM products
             LEFT JOIN categories ON products.category_id = categories.category_id
             WHERE products.product_id = %s
@@ -276,9 +272,9 @@ def update_product(product_id, product_data):
 
         cursor.execute('''
             UPDATE products
-            SET product_name = %s, price = %s, quantity = %s, category_id = %s
+            SET product_name = %s, price = %s, quantity = %s, image_path = %s, category_id = %s
             WHERE product_id = %s
-        ''', (product_data['product_name'], product_data['price'], product_data['quantity'], product_data['category_id'], product_id))
+        ''', (product_data['product_name'], product_data['price'], product_data['quantity'], product_data['image_path'], product_data['category_id'], product_id))
 
         cursor.close()
         connection.close()

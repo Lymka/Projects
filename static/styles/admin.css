@@ -208,14 +208,10 @@ table .button:hover {
     border: none;
 }
 
-/* end form */
-
-/* select */
-
 select {
-    display:flex;
+    display: flex;
     flex-direction: column;
-    background: transparent;
+    background: #222629;
     margin: 1rem 0;
     padding: 0.5rem;
     color: #6B6E70;
@@ -223,20 +219,11 @@ select {
     width: 91%;
     outline: none;
     border-bottom: 2px solid #6B6E70;
+    cursor: pointer;
+    outline: none;
 }
 
-.option {
-    background: rgb(108, 108, 206);
-    order:2;
-    z-index:1;
-    transition: background 4s ease-in-out;
-}
-
-.option:hover {
-    background:#666;
-}
-
-/*  */
+/* end form */
 
 @media (max-width: 1000px) {
     td:not(:first-of-type) {
