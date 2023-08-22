@@ -171,18 +171,15 @@ table .button:hover {
     background: transparent;
     border: none;
     border-bottom: 2px solid #6B6E70;
-    padding: 10px;
+    padding: 0.5rem;
     color: #6B6E70;
     outline: none;
     transition: border-bottom 0.3s ease-in-out;
+    width: 90%;
 }
 
 .input-fields .input:hover {
     border-bottom: 2px solid #C0D9A0;
-}
-
-.input {
-    width: 90%;
 }
 
 ::-webkit-input-placeholder {
@@ -204,7 +201,6 @@ table .button:hover {
     background: #61892F;
     text-align: center;
     padding: 1rem 2rem;
-    width: fit-content;
     border-radius: .6rem;
     color: #C0D9A0;
     cursor: pointer;
@@ -214,6 +210,33 @@ table .button:hover {
 
 /* end form */
 
+/* select */
+
+select {
+    display:flex;
+    flex-direction: column;
+    background: transparent;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    color: #6B6E70;
+    border: none;
+    width: 91%;
+    outline: none;
+    border-bottom: 2px solid #6B6E70;
+}
+
+.option {
+    background: rgb(108, 108, 206);
+    order:2;
+    z-index:1;
+    transition: background 4s ease-in-out;
+}
+
+.option:hover {
+    background:#666;
+}
+
+/*  */
 
 @media (max-width: 1000px) {
     td:not(:first-of-type) {

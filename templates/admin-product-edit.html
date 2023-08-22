@@ -21,11 +21,9 @@
                     <input type="text" class="input" name="price" placeholder="Цена" value="{{ product_data[1] if edit_mode else '' }}">
                     <input type="text" class="input" name="quantity" placeholder="Количество" value="{{ product_data[2] if edit_mode else '' }}">
                     <input type="text" class="input" name="image_path" placeholder="Изображение" value="{{ product_data[3] if edit_mode else '' }}">
-
-                    <label for="category_id">Выберите категорию:</label>
-                    <select id="category_id" name="category_id">
+                    <select id="category_id" name="category_id" class="custom-select">
                         {% for category in categories %}
-                            <option value="{{ category[0] }}" {% if edit_mode and category[0] == product_data[4] %}selected{% endif %}>{{ category[1] }}</option>
+                            <option class="option" value="{{ category[0] }}" {% if edit_mode and category[0] == product_data[4] %}selected{% endif %}>{{ category[1] }}</option>
                         {% endfor %}
                     </select><br>
 
