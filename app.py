@@ -4,6 +4,7 @@ import psycopg2
 import bcrypt
 import os
 import configparser
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -475,6 +476,38 @@ def admin_categories():
     return render_template('admin-categories.html', categories=categories, current_page=current_page)
 
 
+# @app.route('/admin/category', methods=['POST', 'GET'])
+# @login_required
+# def admin_create_category():
+#     if request.method == "POST":
+#         category_name = request.form['category_name']
+#         dimensions = request.form['dimensions']
+#         description = request.form['description']
+#         price = request.form['price']
+#         image_path = request.form['image_path']
+
+#         uploaded_file = request.files['image']
+
+#         if uploaded_file:
+#             image_path = os.path.join('static', 'uploads', secure_filename(uploaded_file.filename))
+#             uploaded_file.save(image_path)
+#             product_data['image_path'] = image_path
+
+#         category_data = {
+#             'category_name': category_name,
+#             'dimensions': dimensions,
+#             'description': description,
+#             'price': price,
+#             'image_path': image_path
+#         }
+
+#         if create_category(category_data):
+#             return redirect('/admin/categories')
+        
+#     elif request.method == 'GET':
+#         return render_template('admin-category-edit.html')
+
+
 @app.route('/admin/category', methods=['POST', 'GET'])
 @login_required
 def admin_create_category():
@@ -483,7 +516,22 @@ def admin_create_category():
         dimensions = request.form['dimensions']
         description = request.form['description']
         price = request.form['price']
-        image_path = request.form['image_path']
+
+        uploaded_file = request.files['image']
+
+        if uploaded_file:
+            # Компонование пути к файлу
+            image_filename = secure_filename(uploaded_file.filename)
+            image_path = os.path.join('static', 'images', 'main-page', category_name, image_filename)
+
+            # Создание папок, если они не существуют
+            os.makedirs(os.path.dirname(image_path), exist_ok=True)
+
+            # Сохранение файла
+            uploaded_file.save(image_path)
+            image_path = '/' + image_path  # Добавляем слеш перед static
+        else:
+            image_path = ""  # Если файл не был загружен, можно установить пустой путь
 
         category_data = {
             'category_name': category_name,
@@ -498,6 +546,7 @@ def admin_create_category():
         
     elif request.method == 'GET':
         return render_template('admin-category-edit.html')
+
 
 
 @app.route('/admin/product', methods=['POST', 'GET'])
@@ -551,7 +600,22 @@ def admin_edit_category(category_id):
         dimensions = request.form['dimensions']
         description = request.form['description']
         price = request.form['price']
-        image_path = request.form['image_path']
+
+        uploaded_file = request.files['image']
+
+        if uploaded_file:
+            # Компонование пути к файлу
+            image_filename = secure_filename(uploaded_file.filename)
+            image_path = os.path.join('static', 'images', 'main-page', category_name, image_filename)
+
+            # Создание папок, если они не существуют
+            os.makedirs(os.path.dirname(image_path), exist_ok=True)
+
+            # Сохранение файла
+            uploaded_file.save(image_path)
+            image_path = '/' + image_path  # Добавляем слеш перед static
+        else:
+            image_path = category_data['image_path']
 
         category_data = {
             'category_name': category_name,

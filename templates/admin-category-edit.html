@@ -16,12 +16,15 @@
                 <h1>{% if edit_mode %} Редактирование категории {% else %} Создание категории {% endif %}</h1>
             </div>
             <div class="contact-form">
-                <form class="input-fields" method="POST">
+                <form class="input-fields" method="POST" enctype="multipart/form-data">
                     <input type="text" class="input" name="category_name" placeholder="Название" value="{{ category_data[0] if edit_mode else '' }}">
                     <input type="text" class="input" name="dimensions" placeholder="Размеры" value="{{ category_data[1] if edit_mode else '' }}">
                     <input type="text" class="input" name="description" placeholder="Описание" value="{{ category_data[2] if edit_mode else '' }}">
                     <input type="text" class="input" name="price" placeholder="Цена" value="{{ category_data[3] if edit_mode else '' }}">
-                    <input type="text" class="input" name="image_path" placeholder="Изображение" value="{{ category_data[4] if edit_mode else '' }}">
+                    
+                    <label for="image">Изображение:</label>
+                    <input type="file" id="image" name="image">
+                    <input type="hidden" class="input" name="image_path" value="{{ category_data[4] if edit_mode else '' }}">
 
                     <button type="submit" class="btn">{% if edit_mode %}Сохранить{% else %}Создать{% endif %}</button>
                 </form>
